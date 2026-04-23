@@ -130,10 +130,101 @@ io.on('connection', (socket) => {
     });
 });
 
+// ─── Built-in Simulators (No Python needed) ────────
+
+// Helper: Generate fake license plate
+function generateFakePlate() {
+    const letters = 'ABCDEFGHJKLMNPRSTUVWXYZ';
+    const rL = () => letters[Math.floor(Math.random() * letters.length)];
+    const rD = () => Math.floor(Math.random() * 10);
+    return `${rL()}${rL()} ${rD()}${rD()} ${rL()}${rL()} ${Math.floor(Math.random() * 9000) + 1000}`;
+}
+
+// Helper: Random element from array
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+// Helper: Random float between min and max
+const randBetween = (min, max) => Math.random() * (max - min) + min;
+
+// IoT Ground Sensor Simulator (replaces virtual_sensors.py)
+function startIoTSimulator() {
+    const ZONES = ['A', 'B', 'C', 'D'];
+    const SPOTS = ZONES.flatMap(z => Array.from({length: 12}, (_, i) => `${z}${String(i + 1).padStart(2, '0')}`));
+
+    console.log('🔋 [Built-in] IoT Virtual Sensors Active');
+
+    function simulateSensorEvent() {
+        const spot = pick(SPOTS);
+        const status = Math.random() < 0.6 ? 'occupied' : 'free';
+
+        if (facilityState.cameraOffline) return;
+
+        if (facilityState.spots[spot]) {
+            facilityState.spots[spot].status = status;
+        }
+        io.emit('spot_update', { spotId: spot, state: facilityState.spots[spot] });
+        io.emit('pricing_update', getPricingState());
+    }
+
+    // Fire a sensor event every 2-5 seconds
+    (function loop() {
+        simulateSensorEvent();
+        setTimeout(loop, randBetween(2000, 5000));
+    })();
+}
+
+// Edge AI ALPR Simulator (replaces edge-ai/main.py)
+function startALPRSimulator() {
+    const ZONES = ['A', 'B', 'C', 'D'];
+
+    console.log('🧠 [Built-in] Edge AI ALPR Engine Active');
+
+    function simulateALPREvent() {
+        if (facilityState.cameraOffline) return;
+
+        const spot = `${pick(ZONES)}${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}`;
+        const direction = Math.random() < 0.55 ? 'ENTRY' : 'EXIT';
+        const plate = generateFakePlate();
+
+        const data = {
+            spot,
+            direction,
+            plate,
+            vehicleType: pick(['Sedan', 'SUV', 'Hatchback', 'Truck', 'Coupe']),
+            timestamp: Date.now()
+        };
+
+        // Update state
+        if (facilityState.spots[spot]) {
+            facilityState.spots[spot].status = direction === 'ENTRY' ? 'occupied' : 'free';
+            facilityState.spots[spot].vehicle = direction === 'ENTRY' ? plate : null;
+            facilityState.spots[spot].entryTime = direction === 'ENTRY' ? Date.now() : null;
+        }
+
+        io.emit('alpr_event', data);
+        io.emit('spot_update', { spotId: spot, state: facilityState.spots[spot] });
+        io.emit('pricing_update', getPricingState());
+    }
+
+    // Fire an ALPR event every 4-8 seconds
+    (function loop() {
+        simulateALPREvent();
+        setTimeout(loop, randBetween(4000, 8000));
+    })();
+}
+
 // Boot the gateway server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`\n🚀 SmartPark Gateway running at http://localhost:${PORT}`);
     console.log(`↳ Processing Edge Telemetry via REST APIs on /api/alpr and /api/spots`);
-    console.log(`↳ Serving WebSocket dashboard to clients...\n`);
+    console.log(`↳ Serving WebSocket dashboard to clients...`);
+
+    // Auto-start simulators after 2 seconds (let clients connect first)
+    setTimeout(() => {
+        console.log(`\n⚡ Starting built-in simulators...`);
+        startIoTSimulator();
+        startALPRSimulator();
+        console.log(`✅ All systems live! Dashboard is fully operational.\n`);
+    }, 2000);
 });
