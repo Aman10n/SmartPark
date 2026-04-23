@@ -1,0 +1,17 @@
+{
+  "name": "smartpark-ai",
+  "version": "1.0.0",
+  "description": "SmartPark AI Dashboard — Edge AI & IoT Smart Parking System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

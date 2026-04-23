@@ -1,0 +1,8 @@
+node_modules/
+server/node_modules/
+*.log
+.env
+.DS_Store
+__pycache__/
+*.pyc
+edge-ai/yolov8n.pt

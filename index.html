@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPark AI — Intelligent Parking Management</title>
+    <meta name="description" content="Edge AI and IoT-Enhanced Smart Parking System with real-time occupancy monitoring, ALPR, dynamic pricing, and predictive analytics.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🅿️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="url(#brandGrad)"/>
+                    <text x="16" y="22" text-anchor="middle" fill="white" font-size="16" font-weight="700" font-family="Inter">P</text>
+                    <defs><linearGradient id="brandGrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#3b82f6"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1>SmartPark</h1>
+                <span>AI Dashboard</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="dashboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-section="parking">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <span>Parking Map</span>
+            </a>
+            <a href="#" class="nav-item" data-section="alpr">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>ALPR Logs</span>
+            </a>
+            <a href="#" class="nav-item" data-section="analytics">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-section="pricing">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>Pricing</span>
+            </a>
+            <a href="#" class="nav-item" data-section="iot">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path><path d="M22 12h-4l-3-9L9 21l-3-9H2"></path></svg>
+                <span>IoT Simulation</span>
+            </a>
+            <a href="#" class="nav-item" data-section="settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="system-badge">
+                <span class="badge badge-green">● Online</span>
+                <span class="version">v2.4.1</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <div class="facility-info">
+                    <h2>Metro Central Parking</h2>
+                    <span class="facility-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Downtown District, Level B1–B3
+                    </span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="live-indicator">
+                    <span class="pulse-dot"></span>
+                    <span>LIVE</span>
+                </div>
+                <div class="header-time" id="header-time"></div>
+            </div>
+        </header>
+
+        <!-- STATS ROW -->
+        <section class="stats-row">
+            <div class="stat-card stat-total">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-total-val">48</span>
+                    <span class="stat-label">Total Spots</span>
+                </div>
+            </div>
+            <div class="stat-card stat-occupied">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-occupied-val">0</span>
+                    <span class="stat-label">Occupied</span>
+                </div>
+            </div>
+            <div class="stat-card stat-available">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-available-val">0</span>
+                    <span class="stat-label">Available</span>
+                </div>
+            </div>
+            <div class="stat-card stat-revenue">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-revenue-val">$0</span>
+                    <span class="stat-label">Today's Revenue</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- WIDGETS GRID -->
+        <section class="widgets-grid" id="main-grid">
+
+            <!-- Parking Map -->
+            <div class="widget widget-parking" id="widget-parking" data-views="dashboard,parking">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                        Real-Time Parking Map
+                    </h3>
+                    <div class="zone-legend" id="zone-legend"></div>
+                </div>
+                <div class="parking-map" id="parking-map">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- ALPR Feed -->
+            <div class="widget widget-alpr" id="widget-alpr" data-views="dashboard,alpr">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                        ALPR Live Feed
+                    </h3>
+                    <span class="badge badge-blue">Edge AI</span>
+                </div>
+                <div class="alpr-feed" id="alpr-feed">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Occupancy Chart -->
+            <div class="widget widget-chart" data-views="dashboard,analytics">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        Occupancy Trend (24h)
+                    </h3>
+                    <span class="badge badge-purple">GRU-LSTM</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="occupancy-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="widget widget-chart" data-views="dashboard,analytics">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        Revenue Analytics
+                    </h3>
+                    <span class="badge badge-green">Stripe API</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenue-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Dynamic Pricing -->
+            <div class="widget widget-pricing" data-views="dashboard,pricing">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Dynamic Pricing Engine
+                    </h3>
+                    <span class="badge badge-amber">AI Optimized</span>
+                </div>
+                <div class="pricing-content" id="pricing-content">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- System Architecture -->
+            <div class="widget widget-architecture" data-views="dashboard,settings">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                        Edge-Dew-Cloud Architecture
+                    </h3>
+                    <span class="badge badge-blue">3-Tier</span>
+                </div>
+                <div class="architecture-content" id="architecture-content">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+            
+            <!-- IoT Edge Simulation -->
+            <div class="widget widget-iot" data-views="iot" style="display: none;">
+                <div class="widget-header">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path><path d="M22 12h-4l-3-9L9 21l-3-9H2"></path></svg>
+                        IoT Edge Simulation Panel
+                    </h3>
+                    <span class="badge badge-pink">Manual Override</span>
+                </div>
+                <div class="iot-content">
+                    <p class="iot-description">Simulate hardware events from the ALPR Edge Cameras and localized Dew Servers below to test system responsiveness.</p>
+                    
+                    <div class="iot-controls">
+                        <div class="iot-btn-group">
+                            <h4>Vehicle Flow Events</h4>
+                            <button id="btn-sim-entry" class="btn btn-emerald">
+                                <span>Simulate Vehicle IN (<kbd>E</kbd>)</span>
+                                ↘️
+                            </button>
+                            <button id="btn-sim-exit" class="btn btn-amber">
+                                <span>Simulate Vehicle OUT (<kbd>X</kbd>)</span>
+                                ↗️
+                            </button>
+                        </div>
+                        
+                        <div class="iot-btn-group">
+                            <h4>Hardware & Pricing</h4>
+                            <button id="btn-sim-surge" class="btn btn-red">
+                                <span>Force Peak Surge Pricing</span>
+                                💰
+                            </button>
+                            <button id="btn-sim-offline" class="btn btn-subtle">
+                                <span>Toggle Camera Disconnect</span>
+                                🔌
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/app.js?v=2"></script>
+</body>
+</html>
